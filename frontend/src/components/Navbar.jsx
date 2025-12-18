@@ -10,7 +10,7 @@ function Navbar() {
         to="/" 
         className="text-2xl font-bold text-indigo-600 hover:text-indigo-700 transition-colors"
       >
-        Badminton
+        Badminton Booking
       </Link>
 
       <div className="flex items-center gap-6">
