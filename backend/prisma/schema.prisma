@@ -1,0 +1,119 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  USER
+  ADMIN
+}
+
+enum CourtType {
+  INDOOR
+  OUTDOOR
+}
+
+enum BookingStatus {
+  CONFIRMED
+  CANCELLED
+}
+
+enum PricingRuleType {
+  PEAK_HOUR
+  WEEKEND
+  INDOOR
+}
+
+model User {
+  id        String    @id @default(uuid())
+  name      String
+  email     String    @unique
+  password  String
+  role      UserRole  @default(USER)
+  bookings  Booking[]
+  createdAt DateTime  @default(now())
+}
+
+model Court {
+  id        String    @id @default(uuid())
+  name      String
+  type      CourtType
+  basePrice Int
+  isActive  Boolean   @default(true)
+  bookings  Booking[]
+  createdAt DateTime  @default(now())
+}
+
+model Equipment {
+  id            String   @id @default(uuid())
+  name          String
+  totalQuantity Int
+  pricePerHour  Int
+  createdAt     DateTime @default(now())
+
+  bookings BookingEquipment[]
+}
+
+model Coach {
+  id           String              @id @default(uuid())
+  name         String
+  pricePerHour Int
+  isActive     Boolean             @default(true)
+  availability CoachAvailability[]
+  bookings     Booking[]
+  createdAt    DateTime            @default(now())
+}
+
+model CoachAvailability {
+  id        String   @id @default(uuid())
+  coachId   String
+  date      DateTime
+  startTime Int
+  endTime   Int
+
+  coach Coach @relation(fields: [coachId], references: [id])
+}
+
+model PricingRule {
+  id         String          @id @default(uuid())
+  name       String
+  type       PricingRuleType
+  multiplier Float
+  isActive   Boolean         @default(true)
+  createdAt  DateTime        @default(now())
+}
+
+model Booking {
+  id         String        @id @default(uuid())
+  userId     String
+  courtId    String
+  coachId    String?
+  date       DateTime
+  startTime  Int
+  endTime    Int
+  totalPrice Int
+  status     BookingStatus @default(CONFIRMED)
+
+  user      User               @relation(fields: [userId], references: [id])
+  court     Court              @relation(fields: [courtId], references: [id])
+  coach     Coach?             @relation(fields: [coachId], references: [id])
+  equipment BookingEquipment[]
+
+  createdAt DateTime @default(now())
+
+  @@index([courtId, date, startTime, endTime])
+}
+
+model BookingEquipment {
+  id          String @id @default(uuid())
+  bookingId   String
+  equipmentId String
+  quantity    Int
+
+  booking   Booking   @relation(fields: [bookingId], references: [id])
+  equipment Equipment @relation(fields: [equipmentId], references: [id])
+}
