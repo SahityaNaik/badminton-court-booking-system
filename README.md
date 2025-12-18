@@ -2,6 +2,11 @@
 
 A full-stack application for managing badminton court bookings, equipment rentals, and coach reservations. The system features dynamic pricing driven by configurable rules stored in the database (peak hours, weekends, court type) and an admin interface for managing resources.
 
+## Deployment
+
+- **Live Demo:** [https://badminton-court-booking-system-two.vercel.app/](https://badminton-court-booking-system-two.vercel.app/) *(Frontend)*
+- **API Base URL:** [https://badminton-booking-backend-a0zs.onrender.com/](https://badminton-booking-backend-a0zs.onrender.com/) *(Backend)*
+
 ## Tech Stack
 
 - **Backend:** Node.js, Express, PostgreSQL, Prisma ORM
